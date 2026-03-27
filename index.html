@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prode Argento — Mundial 2026</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>🇦🇷 Prode Argento</h1>
+    <p>Mundial 2026 — ¿Quién llegará a la final?</p>
+  </header>
+
+<!-- Pantalla de login -->
+  <div id="login-screen">
+    <div class="login-container">
+      <h2 class="login-titulo">¿Quién sos?</h2>
+      <p class="login-subtitulo">INGRESÁ PARA GUARDAR TU PRODE</p>
+
+      <div class="login-tabs">
+        <button class="tab-btn active" onclick="switchTab('registro')">Registrarme</button>
+        <button class="tab-btn" onclick="switchTab('login')">Ya tengo cuenta</button>
+      </div>
+
+      <div id="tab-registro">
+        <input type="text" id="reg-nombre" placeholder="Tu nombre o apodo" class="login-input">
+        <input type="email" id="reg-email" placeholder="Tu email" class="login-input">
+        <input type="password" id="reg-password" placeholder="Contraseña" class="login-input">
+        <button class="login-btn" onclick="registrarse()">Crear cuenta</button>
+      </div>
+
+      <div id="tab-login" style="display:none">
+        <input type="email" id="log-email" placeholder="Tu email" class="login-input">
+        <input type="password" id="log-password" placeholder="Contraseña" class="login-input">
+        <button class="login-btn" onclick="iniciarSesion()">Entrar</button>
+      </div>
+
+      <p id="login-error" class="login-error"></p>
+    </div>
+  </div>
+
+  <!-- App principal -->
+  <main id="app" style="display:none"></main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="data/selecciones.js"></script>
+  <script src="app.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ranking — Prode Argento</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .ranking-container {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    .ranking-titulo {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      margin-bottom: 8px;
+      color: #1a1a1a;
+    }
+    .ranking-subtitulo {
+      font-size: 0.8rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #666;
+      margin-bottom: 30px;
+    }
+    .ranking-tabla {
+      background: #ffffff;
+      border: 2px solid #1a1a1a;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 6px 6px 0px #1a1a1a;
+    }
+    .ranking-row {
+      display: grid;
+      grid-template-columns: 60px 1fr auto;
+      align-items: center;
+      padding: 14px 20px;
+      border-bottom: 1px solid #e0d8c8;
+      transition: background 0.15s;
+    }
+    .ranking-row:last-child {
+      border-bottom: none;
+    }
+    .ranking-row:hover {
+      background: #f5f0e8;
+    }
+    .ranking-row.top-1 {
+      background: #fffbea;
+      border-left: 4px solid #F6C700;
+    }
+    .ranking-row.top-2 {
+      background: #f8f8f8;
+      border-left: 4px solid #aaa;
+    }
+    .ranking-row.top-3 {
+      background: #fff5f0;
+      border-left: 4px solid #cd7f32;
+    }
+    .ranking-row.soy-yo {
+      background: #e8f4ff;
+      border-left: 4px solid #75AADB;
+      font-weight: 700;
+    }
+    .rank-pos {
+      font-size: 1.3rem;
+      text-align: center;
+    }
+    .rank-nombre {
+      font-size: 0.95rem;
+      color: #1a1a1a;
+    }
+    .rank-pts {
+      font-weight: 700;
+      color: #75AADB;
+      font-size: 0.95rem;
+    }
+    .rank-pts span {
+      font-size: 0.75rem;
+      color: #999;
+      font-weight: 400;
+      margin-left: 4px;
+    }
+    .ranking-header-row {
+      display: grid;
+      grid-template-columns: 60px 1fr auto;
+      padding: 10px 20px;
+      background: #75AADB;
+      color: white;
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .btn-volver {
+      display: inline-block;
+      margin-bottom: 20px;
+      padding: 10px 20px;
+      background: #f5f0e8;
+      border: 2px solid #1a1a1a;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      text-decoration: none;
+      color: #1a1a1a;
+      box-shadow: 3px 3px 0px #1a1a1a;
+    }
+    .btn-volver:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 4px 4px 0px #1a1a1a;
+    }
+    .cargando {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+      font-style: italic;
+    }
+    .ranking-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: #ffffff;
+      border: 2px solid #1a1a1a;
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+      box-shadow: 3px 3px 0px #1a1a1a;
+    }
+    .stat-numero {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: #75AADB;
+    }
+    .stat-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #666;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🇦🇷 Prode Argento</h1>
+  <p>Mundial 2026 — ¿Quién llegará a la final?</p>
+</header>
+
+<div class="ranking-container">
+  <a href="index.html" class="btn-volver">← Volver al prode</a>
+
+  <h2 class="ranking-titulo">🏆 Ranking Global</h2>
+  <p class="ranking-subtitulo">Todos los participantes</p>
+
+  <div class="ranking-stats" id="stats">
+    <div class="stat-card">
+      <div class="stat-numero" id="stat-jugadores">-</div>
+      <div class="stat-label">Jugadores</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-numero" id="stat-puntaje-max">-</div>
+      <div class="stat-label">Puntaje máximo</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-numero" id="stat-partidos">-</div>
+      <div class="stat-label">Partidos jugados</div>
+    </div>
+  </div>
+
+  <div class="ranking-tabla">
+    <div class="ranking-header-row">
+      <span>#</span>
+      <span>Jugador</span>
+      <span>Puntos</span>
+    </div>
+    <div id="ranking-lista">
+      <div class="cargando">Cargando ranking...</div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<script>
+
+let usuarioActualId = null;
+
+async function iniciarRanking() {
+  // Verificar si hay sesión
+  const { data: { session } } = await db.auth.getSession();
+  if (session) usuarioActualId = session.user.id;
+
+  await cargarStats();
+  await cargarRanking();
+}
+
+async function cargarStats() {
+  const { data: usuarios } = await db.from('usuarios').select('id');
+  const { data: resultados } = await db.from('resultados').select('id');
+
+  const { data: puntajes } = await db.from('puntajes').select('puntos');
+  const maxPts = puntajes && puntajes.length > 0
+    ? Math.max(...puntajes.map(p => p.puntos))
+    : 0;
+
+  document.getElementById('stat-jugadores').textContent = usuarios?.length || 0;
+  document.getElementById('stat-partidos').textContent = resultados?.length || 0;
+  document.getElementById('stat-puntaje-max').textContent = maxPts;
+}
+
+async function cargarRanking() {
+  const { data: usuarios } = await db.from('usuarios').select('id, nombre');
+  if (!usuarios || usuarios.length === 0) {
+    document.getElementById('ranking-lista').innerHTML = '<div class="cargando">Todavía no hay jugadores.</div>';
+    return;
+  }
+
+  // Calcular puntaje total de cada usuario
+  const { data: puntajes } = await db.from('puntajes').select('usuario_id, puntos');
+
+  const totales = {};
+  usuarios.forEach(u => totales[u.id] = { id: u.id, nombre: u.nombre, puntos: 0 });
+  puntajes?.forEach(p => {
+    if (totales[p.usuario_id]) totales[p.usuario_id].puntos += p.puntos;
+  });
+
+  const ranking = Object.values(totales).sort((a, b) => b.puntos - a.puntos);
+
+  let html = '';
+  ranking.forEach((u, i) => {
+    const pos = i + 1;
+    const emoji = pos === 1 ? '🥇' : pos === 2 ? '🥈' : pos === 3 ? '🥉' : `${pos}°`;
+    const clase = pos === 1 ? 'top-1' : pos === 2 ? 'top-2' : pos === 3 ? 'top-3' : '';
+    const soyYo = u.id === usuarioActualId ? 'soy-yo' : '';
+
+    html += `
+      <div class="ranking-row ${clase} ${soyYo}">
+        <span class="rank-pos">${emoji}</span>
+        <span class="rank-nombre">${u.nombre} ${u.id === usuarioActualId ? '👤' : ''}</span>
+        <span class="rank-pts">${u.puntos}<span>pts</span></span>
+      </div>
+    `;
+  });
+
+  document.getElementById('ranking-lista').innerHTML = html;
+}
+
+iniciarRanking();
+</script>
+</body>
+</html>

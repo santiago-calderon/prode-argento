@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — Prode Argento</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .admin-container {
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .admin-titulo {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      margin-bottom: 30px;
+      color: #1a1a1a;
+    }
+    .admin-clave-screen {
+      background: #ffffff;
+      border: 2px solid #1a1a1a;
+      box-shadow: 6px 6px 0px #1a1a1a;
+      border-radius: 12px;
+      padding: 40px;
+      text-align: center;
+      max-width: 400px;
+      margin: 100px auto;
+    }
+    .admin-partido {
+      background: #ffffff;
+      border: 2px solid #1a1a1a;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 12px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 3px 3px 0px #1a1a1a;
+    }
+    .admin-partido.cargado {
+      border-color: #27ae60;
+      box-shadow: 3px 3px 0px #27ae60;
+    }
+    .admin-equipo {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .admin-inputs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .admin-input {
+      width: 50px;
+      height: 44px;
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border: 2px solid #1a1a1a;
+      border-radius: 6px;
+      outline: none;
+    }
+    .btn-guardar-resultado {
+      padding: 10px 16px;
+      background: #F6C700;
+      border: 2px solid #1a1a1a;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .btn-guardar-resultado:hover {
+      background: #27ae60;
+      color: white;
+    }
+    .resultado-cargado {
+      color: #27ae60;
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-align: center;
+    }
+    .grupo-admin-titulo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      margin: 24px 0 12px;
+      padding-bottom: 6px;
+      border-bottom: 3px solid #F6C700;
+    }
+    .filtro-container {
+      margin-bottom: 24px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .btn-filtro {
+      padding: 8px 16px;
+      border: 2px solid #1a1a1a;
+      border-radius: 20px;
+      background: #f5f0e8;
+      font-weight: 600;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+    .btn-filtro.active {
+      background: #75AADB;
+      color: white;
+    }
+
+    .admin-seccion {
+  margin-bottom: 40px;
+  background: #ffffff;
+  border: 2px solid #1a1a1a;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 4px 4px 0px #1a1a1a;
+}
+
+.admin-seccion-titulo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #f5f0e8;
+}
+
+.fase-control-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #f5f0e8;
+}
+
+.fase-control-row:last-child {
+  border-bottom: none;
+}
+
+.fase-control-nombre {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.fase-control-estado {
+  font-size: 0.8rem;
+  color: #999;
+  margin-top: 2px;
+}
+
+.btn-habilitar {
+  padding: 8px 16px;
+  background: #f5f0e8;
+  border: 2px solid #1a1a1a;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.btn-habilitar.habilitada {
+  background: #27ae60;
+  color: white;
+  border-color: #27ae60;
+}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🇦🇷 Prode Argento</h1>
+  <p>Mundial 2026 — ¿Quién llegará a la final?</p>
+</header>
+
+<!-- Pantalla de clave -->
+<div id="clave-screen" class="admin-clave-screen">
+  <h2 style="font-family:'Playfair Display',serif;margin-bottom:16px">🔐 Admin</h2>
+  <p style="color:#666;margin-bottom:20px;font-size:0.85rem">Ingresá la clave de acceso</p>
+  <input type="password" id="input-clave" placeholder="Clave secreta" class="login-input">
+  <button class="login-btn" onclick="verificarClave()">Entrar</button>
+  <p id="clave-error" class="login-error"></p>
+</div>
+
+<div id="panel-admin" style="display:none">
+  <div class="admin-container">
+    <h2 class="admin-titulo">⚙️ Panel Admin</h2>
+
+    <div class="admin-seccion">
+      <h3 class="admin-seccion-titulo">🔓 Control de Fases</h3>
+      <div id="control-fases"></div>
+    </div>
+
+    <div class="admin-seccion">
+      <h3 class="admin-seccion-titulo">📋 Cargar Resultados</h3>
+      <div class="filtro-container" id="filtros"></div>
+      <div id="partidos-admin"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<script src="data/selecciones.js"></script>
+<script>
+
+// ================================
+// CLAVE DE ACCESO
+// ================================
+const CLAVE_ADMIN = 'Caldera12_'; // Cambiala por la tuya
+
+async function verificarClave() {
+  const clave = document.getElementById('input-clave').value;
+  if (clave === CLAVE_ADMIN) {
+    document.getElementById('clave-screen').style.display = 'none';
+    document.getElementById('panel-admin').style.display = 'block';
+    await iniciarAdmin();
+  } else {
+    document.getElementById('clave-error').textContent = 'Clave incorrecta';
+  }
+}
+
+// Enter para confirmar clave
+document.getElementById('input-clave').addEventListener('keypress', e => {
+  if (e.key === 'Enter') verificarClave();
+});
+
+// ================================
+// ADMIN
+// ================================
+let resultadosCargados = {};
+let fasesData = {};
+let grupoFiltro = 'todos';
+
+async function iniciarAdmin() {
+  const { data } = await db.from('resultados').select('*');
+  if (data) {
+    data.forEach(r => {
+      resultadosCargados[r.partido_id] = {
+        golesLocal: r.goles_local,
+        golesVisitante: r.goles_visitante
+      };
+    });
+  }
+  await cargarFases();
+  renderFiltros();
+  renderPartidos();
+}
+
+async function cargarFases() {
+  const { data } = await db.from('fases').select('*');
+  if (data) {
+    data.forEach(f => fasesData[f.id] = f);
+  }
+  renderFases();
+}
+
+function renderFases() {
+  const orden = ['grupos', 'dieciseisavos', 'octavos', 'cuartos', 'semifinales', 'final'];
+  let html = '';
+
+  orden.forEach(faseId => {
+    const fase = fasesData[faseId];
+    if (!fase) return;
+
+    html += `
+      <div class="fase-control-row">
+        <div>
+          <div class="fase-control-nombre">${fase.nombre}</div>
+          <div class="fase-control-estado">${fase.habilitada ? '✅ Habilitada' : '🔒 Bloqueada'}</div>
+        </div>
+        <button class="btn-habilitar ${fase.habilitada ? 'habilitada' : ''}"
+          onclick="toggleFase('${faseId}')">
+          ${fase.habilitada ? 'Deshabilitar' : 'Habilitar'}
+        </button>
+      </div>
+    `;
+  });
+
+  document.getElementById('control-fases').innerHTML = html;
+}
+
+async function toggleFase(faseId) {
+  const fase = fasesData[faseId];
+  const nuevaHabilitada = !fase.habilitada;
+
+  const { error } = await db.from('fases')
+    .update({
+      habilitada: nuevaHabilitada,
+      habilitada_en: nuevaHabilitada ? new Date().toISOString() : null
+    })
+    .eq('id', faseId);
+
+  if (error) { alert('Error al actualizar fase'); return; }
+
+  fasesData[faseId].habilitada = nuevaHabilitada;
+
+  // Si habilitamos dieciseisavos, calcular cruces automáticamente
+  if (faseId === 'dieciseisavos' && nuevaHabilitada) {
+    await calcularCrucesDieciseisavos();
+  }
+
+  renderFases();
+}
+
+
+async function calcularCrucesDieciseisavos() {
+  // Traer todos los pronósticos de grupos de todos los usuarios
+  // Para los cruces usamos UN usuario representativo (el primero que completó)
+  // Los cruces son iguales para todos - se basan en posiciones, no en equipos específicos por usuario
+  
+  // Traer selecciones y partidos
+  const grupos = [...new Set(SELECCIONES.map(s => s.grupo))].sort();
+  
+  // Necesitamos los pronósticos para calcular las tablas
+  // Usamos los resultados reales cargados
+  const { data: resultados } = await db.from('resultados').select('*');
+  
+  if (!resultados || resultados.length === 0) {
+    alert('No hay resultados cargados. Cargá los resultados de grupos primero.');
+    await db.from('fases').update({ habilitada: false }).eq('id', 'dieciseisavos');
+    fasesData['dieciseisavos'].habilitada = false;
+    renderFases();
+    return;
+  }
+
+  // Construir tabla de resultados reales
+  const resReales = {};
+  resultados.forEach(r => resReales[r.partido_id] = r);
+
+  // Calcular tabla de cada grupo con resultados reales
+  const clasificados = { primeros: [], segundos: [], terceros: [] };
+
+  grupos.forEach(grupo => {
+    const selecciones = SELECCIONES.filter(s => s.grupo === grupo);
+    const partidos = PARTIDOS.filter(p => p.grupo === grupo);
+    const tabla = {};
+
+    selecciones.forEach(s => {
+      tabla[s.id] = { id: s.id, nombre: s.nombre, bandera: s.bandera, pts: 0, gf: 0, gc: 0, dg: 0, pj: 0, grupo };
+    });
+
+    partidos.forEach(p => {
+      const res = resReales[p.id];
+      if (!res) return;
+      const gl = res.goles_local;
+      const gv = res.goles_visitante;
+      tabla[p.local].pj++; tabla[p.visitante].pj++;
+      tabla[p.local].gf += gl; tabla[p.local].gc += gv;
+      tabla[p.visitante].gf += gv; tabla[p.visitante].gc += gl;
+      if (gl > gv) { tabla[p.local].pts += 3; }
+      else if (gl < gv) { tabla[p.visitante].pts += 3; }
+      else { tabla[p.local].pts += 1; tabla[p.visitante].pts += 1; }
+    });
+
+    Object.values(tabla).forEach(t => t.dg = t.gf - t.gc);
+    const ordenada = Object.values(tabla).sort((a, b) => b.pts - a.pts || b.dg - a.dg || b.gf - a.gf);
+
+    if (ordenada[0]) clasificados.primeros.push({ ...ordenada[0], grupo });
+    if (ordenada[1]) clasificados.segundos.push({ ...ordenada[1], grupo });
+    if (ordenada[2]) clasificados.terceros.push({ ...ordenada[2], grupo });
+  });
+
+  // Ordenar terceros y tomar los 8 mejores
+  const mejoresTerceros = clasificados.terceros
+    .sort((a, b) => b.pts - a.pts || b.dg - a.dg || b.gf - a.gf)
+    .slice(0, 8);
+
+  // Armar los 16 cruces
+  // Formato: 1A vs 2B, 1B vs 2A, 1C vs 2D, 1D vs 2C, etc.
+  const cruces = [
+    { id: 'R32_1', pos: 1, local: clasificados.primeros.find(p => p.grupo === 'A'), visitante: clasificados.segundos.find(p => p.grupo === 'B') },
+    { id: 'R32_2', pos: 2, local: clasificados.primeros.find(p => p.grupo === 'B'), visitante: clasificados.segundos.find(p => p.grupo === 'A') },
+    { id: 'R32_3', pos: 3, local: clasificados.primeros.find(p => p.grupo === 'C'), visitante: clasificados.segundos.find(p => p.grupo === 'D') },
+    { id: 'R32_4', pos: 4, local: clasificados.primeros.find(p => p.grupo === 'D'), visitante: clasificados.segundos.find(p => p.grupo === 'C') },
+    { id: 'R32_5', pos: 5, local: clasificados.primeros.find(p => p.grupo === 'E'), visitante: clasificados.segundos.find(p => p.grupo === 'F') },
+    { id: 'R32_6', pos: 6, local: clasificados.primeros.find(p => p.grupo === 'F'), visitante: clasificados.segundos.find(p => p.grupo === 'E') },
+    { id: 'R32_7', pos: 7, local: clasificados.primeros.find(p => p.grupo === 'G'), visitante: clasificados.segundos.find(p => p.grupo === 'H') },
+    { id: 'R32_8', pos: 8, local: clasificados.primeros.find(p => p.grupo === 'H'), visitante: clasificados.segundos.find(p => p.grupo === 'G') },
+    { id: 'R32_9', pos: 9, local: clasificados.primeros.find(p => p.grupo === 'I'), visitante: clasificados.segundos.find(p => p.grupo === 'J') },
+    { id: 'R32_10', pos: 10, local: clasificados.primeros.find(p => p.grupo === 'J'), visitante: clasificados.segundos.find(p => p.grupo === 'I') },
+    { id: 'R32_11', pos: 11, local: clasificados.primeros.find(p => p.grupo === 'K'), visitante: clasificados.segundos.find(p => p.grupo === 'L') },
+    { id: 'R32_12', pos: 12, local: clasificados.primeros.find(p => p.grupo === 'L'), visitante: clasificados.segundos.find(p => p.grupo === 'K') },
+    { id: 'R32_13', pos: 13, local: mejoresTerceros[0], visitante: mejoresTerceros[1] },
+    { id: 'R32_14', pos: 14, local: mejoresTerceros[2], visitante: mejoresTerceros[3] },
+    { id: 'R32_15', pos: 15, local: mejoresTerceros[4], visitante: mejoresTerceros[5] },
+    { id: 'R32_16', pos: 16, local: mejoresTerceros[6], visitante: mejoresTerceros[7] },
+  ];
+
+  // Borrar cruces anteriores si existían
+  await db.from('partidos_eliminatorios').delete().eq('fase', 'dieciseisavos');
+
+  // Guardar cruces en Supabase
+  for (const cruce of cruces) {
+    if (!cruce.local || !cruce.visitante) continue;
+    await db.from('partidos_eliminatorios').insert({
+      id: cruce.id,
+      fase: 'dieciseisavos',
+      posicion: cruce.pos,
+      equipo_local: cruce.local.id,
+      equipo_visitante: cruce.visitante.id
+    });
+  }
+
+  alert('✅ Dieciseisavos calculados y guardados correctamente.');
+}
+
+
+function renderFiltros() {
+  const grupos = [...new Set(PARTIDOS.map(p => p.grupo))].sort();
+  let html = `<button class="btn-filtro active" onclick="filtrar('todos', this)">Todos</button>`;
+  grupos.forEach(g => {
+    html += `<button class="btn-filtro" onclick="filtrar('${g}', this)">Grupo ${g}</button>`;
+  });
+  document.getElementById('filtros').innerHTML = html;
+}
+
+function filtrar(grupo, btn) {
+  grupoFiltro = grupo;
+  document.querySelectorAll('.btn-filtro').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderPartidos();
+}
+
+async function borrarResultado(partidoId) {
+  if (!confirm('¿Borrar este resultado?')) return;
+
+  await db.from('resultados').delete().eq('partido_id', partidoId);
+  await db.from('puntajes').delete().eq('partido_id', partidoId);
+
+  delete resultadosCargados[partidoId];
+  renderPartidos();
+}
+
+function renderPartidos() {
+  const partidos = grupoFiltro === 'todos'
+    ? PARTIDOS
+    : PARTIDOS.filter(p => p.grupo === grupoFiltro);
+
+  const grupos = [...new Set(partidos.map(p => p.grupo))].sort();
+  let html = '';
+
+  grupos.forEach(grupo => {
+    html += `<div class="grupo-admin-titulo">Grupo ${grupo}</div>`;
+    partidos.filter(p => p.grupo === grupo).forEach(p => {
+      const local = SELECCIONES.find(s => s.id === p.local);
+      const visitante = SELECCIONES.find(s => s.id === p.visitante);
+      const res = resultadosCargados[p.id];
+      const cargado = res !== undefined;
+
+      html += `
+        <div class="admin-partido ${cargado ? 'cargado' : ''}" id="partido-${p.id}">
+          <div class="admin-equipo">${local.bandera} ${local.nombre}</div>
+          <div class="admin-inputs">
+            <input type="number" min="0" max="20" class="admin-input"
+              id="gl-${p.id}" value="${cargado ? res.golesLocal : ''}" placeholder="0">
+            <span style="font-weight:900">-</span>
+            <input type="number" min="0" max="20" class="admin-input"
+              id="gv-${p.id}" value="${cargado ? res.golesVisitante : ''}" placeholder="0">
+          </div>
+          <div class="admin-equipo" style="text-align:right">${visitante.nombre} ${visitante.bandera}</div>
+          <button class="btn-guardar-resultado" onclick="guardarResultado('${p.id}')">
+  ${cargado ? '✅ Actualizar' : 'Guardar'}
+</button>
+${cargado ? `<button class="btn-borrar-resultado" onclick="borrarResultado('${p.id}')">🗑️</button>` : ''}
+        </div>
+      `;
+    });
+  });
+
+  document.getElementById('partidos-admin').innerHTML = html;
+}
+
+async function calcularYGuardarPuntajes(partidoId) {
+  const { data: resultado } = await db.from('resultados')
+    .select('*')
+    .eq('partido_id', partidoId)
+    .single();
+
+  if (!resultado) return;
+
+  const { data: todosPronosticos } = await db.from('pronosticos')
+    .select('*')
+    .eq('partido_id', partidoId);
+
+  if (!todosPronosticos) return;
+
+  for (const pron of todosPronosticos) {
+    const gl_p = parseInt(pron.goles_local);
+    const gv_p = parseInt(pron.goles_visitante);
+    const gl_r = parseInt(resultado.goles_local);
+    const gv_r = parseInt(resultado.goles_visitante);
+
+    if (isNaN(gl_p) || isNaN(gv_p)) continue;
+
+    const ganador = (g, v) => g > v ? 'local' : g < v ? 'visitante' : 'empate';
+    const acerto_ganador = ganador(gl_p, gv_p) === ganador(gl_r, gv_r);
+    const acerto_diferencia = (gl_p - gv_p) === (gl_r - gv_r);
+    const acerto_exacto = gl_p === gl_r && gv_p === gv_r;
+
+    let puntos = 0;
+    if (acerto_ganador) puntos += 1;
+    if (acerto_diferencia) puntos += 2;
+    if (acerto_exacto) puntos += 4;
+
+    await db.from('puntajes').upsert({
+      usuario_id: pron.usuario_id,
+      partido_id: partidoId,
+      puntos,
+      acerto_ganador,
+      acerto_diferencia,
+      acerto_exacto,
+      calculado_en: new Date().toISOString()
+    }, { onConflict: 'usuario_id,partido_id' });
+  }
+}
+
+async function guardarResultado(partidoId) {
+  const gl = document.getElementById(`gl-${partidoId}`).value;
+  const gv = document.getElementById(`gv-${partidoId}`).value;
+
+  if (gl === '' || gv === '') {
+    alert('Ingresá ambos resultados');
+    return;
+  }
+
+  const { error } = await db.from('resultados').upsert({
+    partido_id: partidoId,
+    goles_local: parseInt(gl),
+    goles_visitante: parseInt(gv),
+    cargado_en: new Date().toISOString()
+  }, { onConflict: 'partido_id' });
+
+  if (error) { alert('Error al guardar'); return; }
+
+  resultadosCargados[partidoId] = { golesLocal: gl, golesVisitante: gv };
+
+  // Calcular puntajes automáticamente
+  await calcularYGuardarPuntajes(partidoId);
+
+  renderPartidos();
+  alert(`✅ Resultado guardado y puntajes calculados`);
+}
+
+</script>
+</body>
+</html>
