@@ -1,75 +1,75 @@
 const SELECCIONES = [
   // GRUPO A
-  { id: "mexico", nombre: "México", bandera: "🇲🇽", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "A" },
-  { id: "sudafrica", nombre: "Sudáfrica", bandera: "🇿🇦", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "A" },
-  { id: "corea_sur", nombre: "Corea del Sur", bandera: "🇰🇷", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "A" },
-  { id: "rep_a", nombre: "Rep. Checa / Irlanda / Dinamarca / Macedonia", bandera: "❓", personaje: "Por confirmar", descripcion: "Repechaje UEFA A", grupo: "A" },
+  { id: "mexico", nombre: "México", bandera: "🇲🇽", imagen: "img/mexico.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "A" },
+  { id: "sudafrica", nombre: "Sudáfrica", bandera: "🇿🇦", imagen: "img/sudafrica.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "A" },
+  { id: "corea_sur", nombre: "Corea del Sur", bandera: "🇰🇷", imagen: "img/corea del sur.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "A" },
+  { id: "rep_a", nombre: "Rep. Checa / Irlanda / Dinamarca / Macedonia", bandera: "❓", imagen: "img/rep_a.png", personaje: "Por confirmar", descripcion: "Repechaje UEFA A", grupo: "A" },
 
   // GRUPO B
-  { id: "canada", nombre: "Canadá", bandera: "🇨🇦", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "B" },
-  { id: "qatar", nombre: "Qatar", bandera: "🇶🇦", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "B" },
-  { id: "suiza", nombre: "Suiza", bandera: "🇨🇭", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "B" },
-  { id: "rep_b", nombre: "Gales / Bosnia / Italia / Irlanda del Norte", bandera: "❓", personaje: "Por confirmar", descripcion: "Repechaje UEFA B", grupo: "B" },
+  { id: "canada", nombre: "Canadá", bandera: "🇨🇦", imagen: "img/canada.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "B" },
+  { id: "qatar", nombre: "Qatar", bandera: "🇶🇦", imagen: "img/qatar.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "B" },
+  { id: "suiza", nombre: "Suiza", bandera: "🇨🇭", imagen: "img/suiza.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "B" },
+  { id: "rep_b", nombre: "Gales / Bosnia / Italia / Irlanda del Norte", bandera: "❓", imagen: "img/rep_b.png", personaje: "Por confirmar", descripcion: "Repechaje UEFA B", grupo: "B" },
 
   // GRUPO C
-  { id: "brasil", nombre: "Brasil", bandera: "🇧🇷", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "C",imagen: "img/brasil.png" },
-  { id: "marruecos", nombre: "Marruecos", bandera: "🇲🇦", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "C" },
-  { id: "haiti", nombre: "Haití", bandera: "🇭🇹", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "C" },
-  { id: "escocia", nombre: "Escocia", bandera: "🏴󠁧󠁢󠁳󠁣󠁴󠁿", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "C" },
+  { id: "brasil", nombre: "Brasil", bandera: "🇧🇷", imagen: "img/brasil.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "C" },
+  { id: "marruecos", nombre: "Marruecos", bandera: "🇲🇦", imagen: "img/marruecos.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "C" },
+  { id: "haiti", nombre: "Haití", bandera: "🇭🇹", imagen: "img/haiti.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "C" },
+  { id: "escocia", nombre: "Escocia", bandera: "🏴", imagen: "img/escocia.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "C" },
 
   // GRUPO D
-  { id: "estados_unidos", nombre: "Estados Unidos", bandera: "🇺🇸", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "D" },
-  { id: "paraguay", nombre: "Paraguay", bandera: "🇵🇾", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "D" },
-  { id: "australia", nombre: "Australia", bandera: "🇦🇺", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "D" },
-  { id: "rep_d", nombre: "Eslovaquia / Kosovo / Turquía / Rumania", bandera: "❓", personaje: "Por confirmar", descripcion: "Repechaje UEFA D", grupo: "D" },
+  { id: "estados_unidos", nombre: "Estados Unidos", bandera: "🇺🇸", imagen: "img/estados_unidos.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "D" },
+  { id: "paraguay", nombre: "Paraguay", bandera: "🇵🇾", imagen: "img/paraguay.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "D" },
+  { id: "australia", nombre: "Australia", bandera: "🇦🇺", imagen: "img/australia.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "D" },
+  { id: "rep_d", nombre: "Eslovaquia / Kosovo / Turquía / Rumania", bandera: "❓", imagen: "img/rep_d.png", personaje: "Por confirmar", descripcion: "Repechaje UEFA D", grupo: "D" },
 
   // GRUPO E
-  { id: "alemania", nombre: "Alemania", bandera: "🇩🇪", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "E" },
-  { id: "curazao", nombre: "Curazao", bandera: "🇨🇼", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "E" },
-  { id: "costa_marfil", nombre: "Costa de Marfil", bandera: "🇨🇮", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "E" },
-  { id: "ecuador", nombre: "Ecuador", bandera: "🇪🇨", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "E" },
+  { id: "alemania", nombre: "Alemania", bandera: "🇩🇪", imagen: "img/alemania.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "E" },
+  { id: "curazao", nombre: "Curazao", bandera: "🇨🇼", imagen: "img/curazao.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "E" },
+  { id: "costa_marfil", nombre: "Costa de Marfil", bandera: "🇨🇮", imagen: "img/costa_marfil.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "E" },
+  { id: "ecuador", nombre: "Ecuador", bandera: "🇪🇨", imagen: "img/ecuador.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "E" },
 
   // GRUPO F
-  { id: "paises_bajos", nombre: "Países Bajos", bandera: "🇳🇱", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "F" },
-  { id: "japon", nombre: "Japón", bandera: "🇯🇵", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "F" },
-  { id: "rep_f", nombre: "Ucrania / Suecia / Polonia / Albania", bandera: "❓", personaje: "Por confirmar", descripcion: "Repechaje UEFA F", grupo: "F" },
-  { id: "tunez", nombre: "Túnez", bandera: "🇹🇳", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "F" },
+  { id: "paises_bajos", nombre: "Países Bajos", bandera: "🇳🇱", imagen: "img/paises_bajos.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "F" },
+  { id: "japon", nombre: "Japón", bandera: "🇯🇵", imagen: "img/japon.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "F" },
+  { id: "rep_f", nombre: "Ucrania / Suecia / Polonia / Albania", bandera: "❓", imagen: "img/rep_f.png", personaje: "Por confirmar", descripcion: "Repechaje UEFA F", grupo: "F" },
+  { id: "tunez", nombre: "Túnez", bandera: "🇹🇳", imagen: "img/tunez.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "F" },
 
   // GRUPO G
-  { id: "belgica", nombre: "Bélgica", bandera: "🇧🇪", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "G" },
-  { id: "egipto", nombre: "Egipto", bandera: "🇪🇬", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "G" },
-  { id: "iran", nombre: "Irán", bandera: "🇮🇷", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "G" },
-  { id: "nueva_zelanda", nombre: "Nueva Zelanda", bandera: "🇳🇿", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "G" },
+  { id: "belgica", nombre: "Bélgica", bandera: "🇧🇪", imagen: "img/belgica.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "G" },
+  { id: "egipto", nombre: "Egipto", bandera: "🇪🇬", imagen: "img/egipto.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "G" },
+  { id: "iran", nombre: "Irán", bandera: "🇮🇷", imagen: "img/iran.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "G" },
+  { id: "nueva_zelanda", nombre: "Nueva Zelanda", bandera: "🇳🇿", imagen: "img/nueva_zelanda.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "G" },
 
   // GRUPO H
-  { id: "españa", nombre: "España", bandera: "🇪🇸", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "H" },
-  { id: "cabo_verde", nombre: "Cabo Verde", bandera: "🇨🇻", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "H" },
-  { id: "arabia_saudita", nombre: "Arabia Saudita", bandera: "🇸🇦", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "H" },
-  { id: "uruguay", nombre: "Uruguay", bandera: "🇺🇾", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "H" },
+  { id: "españa", nombre: "España", bandera: "🇪🇸", imagen: "img/españa.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "H" },
+  { id: "cabo_verde", nombre: "Cabo Verde", bandera: "🇨🇻", imagen: "img/cabo_verde.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "H" },
+  { id: "arabia_saudita", nombre: "Arabia Saudita", bandera: "🇸🇦", imagen: "img/arabia_saudita.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "H" },
+  { id: "uruguay", nombre: "Uruguay", bandera: "🇺🇾", imagen: "img/uruguay.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "H" },
 
   // GRUPO I
-  { id: "francia", nombre: "Francia", bandera: "🇫🇷", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "I",   imagen: "img/francia.png" },
-  { id: "senegal", nombre: "Senegal", bandera: "🇸🇳", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "I" },
-  { id: "rep_i", nombre: "Irak / Bolivia / Surinam", bandera: "❓", personaje: "Por confirmar", descripcion: "Repechaje Intercontinental", grupo: "I" },
-  { id: "noruega", nombre: "Noruega", bandera: "🇳🇴", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "I" },
+  { id: "francia", nombre: "Francia", bandera: "🇫🇷", imagen: "img/francia.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "I" },
+  { id: "senegal", nombre: "Senegal", bandera: "🇸🇳", imagen: "img/senegal.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "I" },
+  { id: "rep_i", nombre: "Irak / Bolivia / Surinam", bandera: "❓", imagen: "img/rep_i.png", personaje: "Por confirmar", descripcion: "Repechaje Intercontinental", grupo: "I" },
+  { id: "noruega", nombre: "Noruega", bandera: "🇳🇴", imagen: "img/noruega.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "I" },
 
   // GRUPO J
-  { id: "argentina", nombre: "Argentina", bandera: "🇦🇷", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "J" },
-  { id: "argelia", nombre: "Argelia", bandera: "🇩🇿", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "J" },
-  { id: "austria", nombre: "Austria", bandera: "🇦🇹", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "J" },
-  { id: "jordania", nombre: "Jordania", bandera: "🇯🇴", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "J" },
+  { id: "argentina", nombre: "Argentina", bandera: "🇦🇷", imagen: "img/argentina.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "J" },
+  { id: "argelia", nombre: "Argelia", bandera: "🇩🇿", imagen: "img/argelia.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "J" },
+  { id: "austria", nombre: "Austria", bandera: "🇦🇹", imagen: "img/austria.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "J" },
+  { id: "jordania", nombre: "Jordania", bandera: "🇯🇴", imagen: "img/jordania.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "J" },
 
   // GRUPO K
-  { id: "portugal", nombre: "Portugal", bandera: "🇵🇹", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "K" },
-  { id: "rep_k", nombre: "RD Congo / Nueva Caledonia / Jamaica", bandera: "❓", personaje: "Por confirmar", descripcion: "Repechaje Intercontinental", grupo: "K" },
-  { id: "uzbekistan", nombre: "Uzbekistán", bandera: "🇺🇿", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "K" },
-  { id: "colombia", nombre: "Colombia", bandera: "🇨🇴", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "K" },
+  { id: "portugal", nombre: "Portugal", bandera: "🇵🇹", imagen: "img/portugal.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "K" },
+  { id: "rep_k", nombre: "RD Congo / Nueva Caledonia / Jamaica", bandera: "❓", imagen: "img/rep_k.png", personaje: "Por confirmar", descripcion: "Repechaje Intercontinental", grupo: "K" },
+  { id: "uzbekistan", nombre: "Uzbekistán", bandera: "🇺🇿", imagen: "img/uzbekistan.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "K" },
+  { id: "colombia", nombre: "Colombia", bandera: "🇨🇴", imagen: "img/colombia.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "K" },
 
   // GRUPO L
-  { id: "inglaterra", nombre: "Inglaterra", bandera: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "L" },
-  { id: "croacia", nombre: "Croacia", bandera: "🇭🇷", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "L" },
-  { id: "ghana", nombre: "Ghana", bandera: "🇬🇭", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "L" },
-  { id: "panama", nombre: "Panamá", bandera: "🇵🇦", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "L" },
+  { id: "inglaterra", nombre: "Inglaterra", bandera: "🏴", imagen: "img/inglaterra.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "L" },
+  { id: "croacia", nombre: "Croacia", bandera: "🇭🇷", imagen: "img/croacia.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "L" },
+  { id: "ghana", nombre: "Ghana", bandera: "🇬🇭", imagen: "img/ghana.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "L" },
+  { id: "panama", nombre: "Panamá", bandera: "🇵🇦", imagen: "img/panama.png", personaje: "TU PERSONAJE", descripcion: "TU DESCRIPCIÓN", grupo: "L" },
 ];
 
 const PARTIDOS = [

@@ -78,6 +78,7 @@ async function checkSesion() {
 async function mostrarApp() {
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('app').style.display = 'block';
+  document.getElementById('main-header').classList.add('header-chico');
   await actualizarPuntajeHeader();
   render();
   renderMisGrupos();
@@ -181,6 +182,19 @@ function gruposCompletos() {
   return true; // TODO: sacar esto antes de lanzar
 }
 
+function toggleGrupos() {
+  const body = document.getElementById('grupos-privados-body');
+  const icon = document.getElementById('grupos-toggle-icon');
+  if (body.style.display === 'none') {
+    body.style.display = 'block';
+    icon.textContent = '▲';
+    renderMisGrupos();
+  } else {
+    body.style.display = 'none';
+    icon.textContent = '▼';
+  }
+}
+
 async function renderEliminatorios(fase, titulo) {
   const app = document.getElementById('app');
 
@@ -214,73 +228,76 @@ pronEliminatorios?.forEach(p => {
     </div>
 
     <div class="grupos-privados-section">
-      <div class="grupos-privados-acciones">
-        <button class="btn-grupo" onclick="crearGrupoPrivado()">➕ Crear grupo</button>
-        <button class="btn-grupo btn-grupo-secundario" onclick="unirseAGrupo()">🔑 Unirme a un grupo</button>
-      </div>
-      <div id="mis-grupos"></div>
+  <div class="grupos-privados-header" onclick="toggleGrupos()">
+    <span class="grupos-privados-titulo">👥 Mis grupos</span>
+    <span id="grupos-toggle-icon">▼</span>
+  </div>
+  <div id="grupos-privados-body" style="display:none">
+    <div class="grupos-privados-acciones">
+      <button class="btn-grupo" onclick="crearGrupoPrivado()">➕ Crear grupo</button>
+      <button class="btn-grupo btn-grupo-secundario" onclick="unirseAGrupo()">🔑 Unirme a un grupo</button>
     </div>
-
+    <div id="mis-grupos"></div>
+  </div>
+</div>
     ${faseTabs}
+<div class="grupo-activo">
+      <div class="grupo-activo-header">
+        <h3 class="grupo-titulo">${titulo}</h3>
+      </div>
+      <div class="grupo-activo-body">
+        <div class="eliminatorios-grid">
+          ${partidos && partidos.length > 0 ? partidos.map(p => {
+            const local = getSeleccion(p.equipo_local);
+            const visitante = getSeleccion(p.equipo_visitante);
+            if (!local || !visitante) return '';
+            return `
+              <div class="eliminatorio-card" data-partido="${p.id}">
+                <div class="elim-partido-num">Partido ${p.posicion}</div>
+                <div class="elim-equipos">
+                  <div class="elim-equipo ${pronMapElim[p.id] === local.id ? 'ganador-elegido' : ''}" data-equipo="${local.id}">
+                    <div class="elim-img-container">
+                      ${local.imagen
+                        ? `<img src="${local.imagen}" class="elim-img">`
+                        : `<div class="elim-emoji">${local.bandera}</div>`
+                      }
+                    </div>
+                    <div class="elim-nombre">${local.personaje !== 'TU PERSONAJE' ? local.personaje : local.nombre}</div>
+                    ${local.personaje !== 'TU PERSONAJE' ? `<div class="elim-pais">${local.nombre}</div>` : ''}
+                    ${pronMapElim[p.id] === local.id ? '<div class="elim-winner-badge">✅ Ganador</div>' : ''}
+                  </div>
 
-    <div class="fase-header">
-      <h2 class="fase-titulo">🏆 ${titulo}</h2>
-      <p class="fase-subtitulo">Elegí el ganador de cada partido</p>
-    </div>
+                  <div class="elim-centro">
+                    <div class="partido-card-inputs">
+                      <input type="number" min="0" max="20"
+                        value="${pronMapElim[p.id + '_gl'] !== undefined && pronMapElim[p.id + '_gl'] !== null ? pronMapElim[p.id + '_gl'] : ''}"
+                        onchange="actualizarPronosticoElim('${p.id}', '${local.id}', '${visitante.id}', 'gl', this.value)"
+                        class="goles-input">
+                      <span class="elim-vs">-</span>
+                      <input type="number" min="0" max="20"
+                        value="${pronMapElim[p.id + '_gv'] !== undefined && pronMapElim[p.id + '_gv'] !== null ? pronMapElim[p.id + '_gv'] : ''}"
+                        onchange="actualizarPronosticoElim('${p.id}', '${local.id}', '${visitante.id}', 'gv', this.value)"
+                        class="goles-input">
+                    </div>
+                  </div>
 
-    <div class="eliminatorios-grid">
-      ${partidos && partidos.length > 0 ? partidos.map(p => {
-        const local = getSeleccion(p.equipo_local);
-        const visitante = getSeleccion(p.equipo_visitante);
-        if (!local || !visitante) return '';
-        const ganadorElegido = pronMapElim[p.id];
-
-        return `
-          <div class="elim-equipo ${pronMapElim[p.id] === local.id ? 'ganador-elegido' : ''}" data-equipo="${local.id}">
-            <div class="elim-partido-num">Partido ${p.posicion}</div>
-
-            <div class="elim-equipos">
-              <div class="elim-equipo ${pronMapElim[p.id] === local.id ? 'ganador-elegido' : ''}">
-                <div class="elim-img-container">
-                  ${local.imagen
-                    ? `<img src="${local.imagen}" class="elim-img">`
-                    : `<div class="elim-emoji">${local.bandera}</div>`
-                  }
+                  <div class="elim-equipo ${pronMapElim[p.id] === visitante.id ? 'ganador-elegido' : ''}" data-equipo="${visitante.id}">
+                    <div class="elim-img-container">
+                      ${visitante.imagen
+                        ? `<img src="${visitante.imagen}" class="elim-img">`
+                        : `<div class="elim-emoji">${visitante.bandera}</div>`
+                      }
+                    </div>
+                    <div class="elim-nombre">${visitante.personaje !== 'TU PERSONAJE' ? visitante.personaje : visitante.nombre}</div>
+                    ${visitante.personaje !== 'TU PERSONAJE' ? `<div class="elim-pais">${visitante.nombre}</div>` : ''}
+                    ${pronMapElim[p.id] === visitante.id ? '<div class="elim-winner-badge">✅ Ganador</div>' : ''}
+                  </div>
                 </div>
-                <div class="elim-nombre">${local.personaje !== 'TU PERSONAJE' ? local.personaje : local.nombre}</div>
-                <div class="elim-pais">${local.nombre}</div>
-                ${ganadorElegido === local.id ? '<div class="elim-winner-badge">✅ Tu pick</div>' : ''}
               </div>
-
-              <div class="elim-centro">
-                <div class="partido-card-inputs">
-                  <input type="number" min="0" max="20"
-                    value="${pronMapElim[p.id + '_gl'] || ''}"
-                    onchange="actualizarPronosticoElim('${p.id}', '${local.id}', '${visitante.id}', 'gl', this.value)"
-                    class="goles-input">
-                  <span class="vs">-</span>
-                  <input type="number" min="0" max="20"
-                    value="${pronMapElim[p.id + '_gv'] || ''}"
-                    onchange="actualizarPronosticoElim('${p.id}', '${local.id}', '${visitante.id}', 'gv', this.value)"
-                    class="goles-input">
-                </div>
-                <div class="elim-vs-label">vs</div>
-              </div>
-              <div class="elim-equipo ${pronMapElim[p.id] === visitante.id ? 'ganador-elegido' : ''}">
-                <div class="elim-img-container">
-                  ${visitante.imagen
-                    ? `<img src="${visitante.imagen}" class="elim-img">`
-                    : `<div class="elim-emoji">${visitante.bandera}</div>`
-                  }
-                </div>
-                <div class="elim-nombre">${visitante.personaje !== 'TU PERSONAJE' ? visitante.personaje : visitante.nombre}</div>
-                <div class="elim-pais">${visitante.nombre}</div>
-                ${ganadorElegido === visitante.id ? '<div class="elim-winner-badge">✅ Tu pick</div>' : ''}
-              </div>
-            </div>
-          </div>
-        `;
-      }).join('') : '<p class="sin-partidos">Los cruces se generan cuando el admin habilita esta fase.</p>'}
+            `;
+          }).join('') : '<p class="sin-partidos">Los cruces se generan cuando el admin habilita esta fase.</p>'}
+        </div>
+      </div>
     </div>
   `;
 
@@ -395,6 +412,9 @@ async function unirseAGrupo() {
 async function renderMisGrupos() {
   const container = document.getElementById('mis-grupos');
   if (!container) return;
+   const body = document.getElementById('grupos-privados-body');
+  const estaAbierto = body && body.style.display !== 'none';
+  if (!estaAbierto) return;
   const { data: membresias } = await db.from('grupo_miembros')
     .select('grupo_id')
     .eq('usuario_id', usuarioActual.id);
@@ -500,13 +520,19 @@ async function renderGrupos() {
       </div>
     </div>
 
-    <div class="grupos-privados-section">
-      <div class="grupos-privados-acciones">
-        <button class="btn-grupo" onclick="crearGrupoPrivado()">➕ Crear grupo</button>
-        <button class="btn-grupo btn-grupo-secundario" onclick="unirseAGrupo()">🔑 Unirme a un grupo</button>
-      </div>
-      <div id="mis-grupos"></div>
+   <div class="grupos-privados-section">
+  <div class="grupos-privados-header" onclick="toggleGrupos()">
+    <span class="grupos-privados-titulo">👥 Mis grupos</span>
+    <span id="grupos-toggle-icon">▼</span>
+  </div>
+  <div id="grupos-privados-body" style="display:none">
+    <div class="grupos-privados-acciones">
+      <button class="btn-grupo" onclick="crearGrupoPrivado()">➕ Crear grupo</button>
+      <button class="btn-grupo btn-grupo-secundario" onclick="unirseAGrupo()">🔑 Unirme a un grupo</button>
     </div>
+    <div id="mis-grupos"></div>
+  </div>
+</div>
 
     ${await renderFaseTabs()}
 
@@ -523,13 +549,11 @@ async function renderGrupos() {
       `).join('')}
     </div>
 
-    <div class="grupo-activo">
-      <div class="grupo-activo-header">
-        <h3 class="grupo-titulo">Grupo ${grupoActivo}</h3>
-        <span class="grupo-progreso">${completados}/${partidos.length}</span>
-      </div>
-
-      <div class="grupo-activo-body">
+  <div class="grupo-activo">
+  <div class="grupo-activo-header">
+  <h3 class="grupo-titulo">Grupo ${grupoActivo}</h3>
+  </div>
+  <div class="grupo-activo-body">
 
         <div class="partidos-lista">
           ${partidos.map(p => {
@@ -605,7 +629,7 @@ async function renderGrupos() {
         </div>
 
       </div>
-    </div>
+    
   `;
 
   if (gruposCompletos()) {
