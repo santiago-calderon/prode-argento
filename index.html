@@ -8,13 +8,17 @@
 </head>
 <body>
 
-  <header id="main-header">
+  <header id="main-header" class="header-chico">
   <img src="img/logo 2.png" class="header-logo" alt="Prode Argento">
   <!-- <p>MUNDIAL 2026 — ¿QUIÉN LLEGARÁ A LA FINAL?</p> -->
 </header>
 
-<nav class="navbar" id="navbar">
+<nav class="navbar" id="navbar" style="display:none">
+   <div class="nav-saludo" id="nav-saludo" style="display:none">
+  👋 <span id="nav-nombre"></span>
+    </div>
   <a href="index.html" class="nav-item active" id="nav-prode">
+   
     <span class="nav-icon">⚽</span>
     <span class="nav-label">Prode</span>
   </a>
@@ -30,14 +34,26 @@
     <span class="nav-icon">🌍</span>
     <span class="nav-label">Selecciones</span>
   </a>
+  <a href="como-jugar.html" class="nav-item">
+  <span class="nav-icon">📖</span>
+  <span class="nav-label">Cómo jugar</span>
+</a>
   <a href="#" class="nav-item" id="nav-salir" onclick="cerrarSesion(); return false;">
     <span class="nav-icon">🚪</span>
     <span class="nav-label">Salir</span>
   </a>
 </nav>
 
+<!-- Pantalla de carga -->
+<div id="loading-screen" style="display:flex; justify-content:center; align-items:center; min-height:60vh;">
+  <div style="text-align:center; color:#999; font-size:0.9rem; letter-spacing:2px; text-transform:uppercase;">
+    Cargando...
+  </div>
+</div>
+
 <!-- Pantalla de login -->
-  <div id="login-screen">
+ 
+  <div id="login-screen" style="display:none">
     <div class="login-container">
       <h2 class="login-titulo">¿Quién sos?</h2>
       <p class="login-subtitulo">INGRESÁ PARA GUARDAR TU PRODE</p>

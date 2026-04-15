@@ -1222,12 +1222,12 @@ main {
   flex-direction: column;
   align-items: center;
   gap: 2px;
-  padding: 6px 16px;
+  padding: 6px 12px;
   border-radius: 8px;
   text-decoration: none;
   color: #999;
   transition: all 0.15s;
-  min-width: 64px;
+  min-width: 56px;
 }
 
 .nav-item:hover {
@@ -1241,14 +1241,14 @@ main {
 }
 
 .nav-icon {
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 
 .nav-label {
-  font-size: 0.7rem;
+  font-size: 0.6rem;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1px
 }
 
 @media (max-width: 600px) {
@@ -1271,4 +1271,40 @@ main {
   .nav-label {
     font-size: 0.6rem;
   }
+}
+
+.nav-saludo {
+  display: flex;
+  align-items: center;
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 8px 16px;
+  gap: 6px;
+  border-right: 1px solid rgba(255,255,255,0.15);
+  margin-right: 8px;
+}
+
+.partido-cerrado {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #e74c3c;
+  text-align: center;
+  padding: 8px;
+}
+
+.partido-cerrado-resultado {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  color: #666;
+}
+
+.mi-pronostico {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: #1a1a1a;
 }

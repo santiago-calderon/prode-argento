@@ -147,10 +147,34 @@
 </head>
 <body>
 
-<header>
-  <h1>🇦🇷 Prode Argento</h1>
-  <p>Mundial 2026 — ¿Quién llegará a la final?</p>
+<header id="main-header" class="header-chico">
+  <a href="index.html">
+    <img src="img/logo 2.png" class="header-logo" alt="Prode Argento">
+  </a>
 </header>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-item">
+    <span class="nav-icon">⚽</span>
+    <span class="nav-label">Prode</span>
+  </a>
+  <a href="grupo.html" class="nav-item">
+    <span class="nav-icon">👥</span>
+    <span class="nav-label">Mi grupo</span>
+  </a>
+  <a href="ranking.html" class="nav-item active">
+    <span class="nav-icon">🏆</span>
+    <span class="nav-label">Ranking</span>
+  </a>
+  <a href="selecciones.html" class="nav-item">
+    <span class="nav-icon">🌍</span>
+    <span class="nav-label">Selecciones</span>
+  </a>
+  <a href="index.html" class="nav-item" onclick="cerrarSesionNav(); return false;">
+    <span class="nav-icon">🚪</span>
+    <span class="nav-label">Salir</span>
+  </a>
+</nav>
 
 <div class="ranking-container">
   <a href="index.html" class="btn-volver">← Volver al prode</a>
@@ -192,9 +216,12 @@
 let usuarioActualId = null;
 
 async function iniciarRanking() {
-  // Verificar si hay sesión
   const { data: { session } } = await db.auth.getSession();
-  if (session) usuarioActualId = session.user.id;
+  if (!session) {
+    window.location.href = 'index.html';
+    return;
+  }
+  usuarioActualId = session.user.id;
 
   await cargarStats();
   await cargarRanking();

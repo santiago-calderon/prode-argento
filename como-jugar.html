@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cómo Jugar — Prode Argento</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header id="main-header" class="header-chico">
+  <a href="index.html">
+    <img src="img/logo.png" class="header-logo" alt="Prode Argento">
+  </a>
+</header>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-item">
+    <span class="nav-icon">⚽</span>
+    <span class="nav-label">Prode</span>
+  </a>
+  <a href="grupo.html" class="nav-item">
+    <span class="nav-icon">👥</span>
+    <span class="nav-label">Mi grupo</span>
+  </a>
+  <a href="ranking.html" class="nav-item">
+    <span class="nav-icon">🏆</span>
+    <span class="nav-label">Ranking</span>
+  </a>
+  <a href="como-jugar.html" class="nav-item active">
+    <span class="nav-icon">📖</span>
+    <span class="nav-label">Cómo jugar</span>
+  </a>
+  <a href="selecciones.html" class="nav-item">
+    <span class="nav-icon">🌍</span>
+    <span class="nav-label">Selecciones</span>
+  </a>
+</nav>
+
+<main>
+  <div class="como-jugar-layout">
+
+    <h1 class="cj-titulo">Cómo se juega</h1>
+    <p class="cj-intro">Si llegaste hasta acá es porque querés ganarle a tus amigos. Bien. Acá te explicamos todo lo que necesitás saber.</p>
+
+    <div class="cj-seccion">
+      <h2 class="cj-seccion-titulo">El básico</h2>
+      <p>El Prode Argento es un pronosticador del Mundial 2026. Antes de que empiece cada partido, cargás tu resultado esperado. Cuando termina el partido real, el sistema compara y te da puntos según qué tan bien la pegaste.</p>
+      <p>Podés competir contra todos los usuarios del sitio en el ranking global, o armar un grupo privado con tus amigos y ver quién la sabe más.</p>
+    </div>
+
+    <div class="cj-seccion">
+      <h2 class="cj-seccion-titulo">Los puntos</h2>
+      <p>Por cada partido podés sumar hasta <strong>7 puntos</strong>:</p>
+      <div class="cj-puntos">
+        <div class="cj-punto">
+          <span class="cj-punto-valor">1 pt</span>
+          <span class="cj-punto-desc">Acertás el ganador (o que empata)</span>
+        </div>
+        <div class="cj-punto">
+          <span class="cj-punto-valor">2 pts</span>
+          <span class="cj-punto-desc">Acertás la diferencia de goles</span>
+        </div>
+        <div class="cj-punto">
+          <span class="cj-punto-valor">4 pts</span>
+          <span class="cj-punto-desc">Acertás el resultado exacto</span>
+        </div>
+      </div>
+      <p>Los puntos se acumulan. Si acertás el resultado exacto, sumás los 7 de una.</p>
+    </div>
+
+    <div class="cj-seccion">
+      <h2 class="cj-seccion-titulo">Los plazos</h2>
+      <p>Cada partido tiene una hora de cierre — el momento en que arranca el partido real. Hasta ese momento podés cargar o cambiar tu pronóstico las veces que quieras. Una vez que arranca, se cierra y no hay forma de editarlo. Ni aunque digas que "no sabías".</p>
+    </div>
+
+    <div class="cj-seccion">
+      <h2 class="cj-seccion-titulo">La fase de grupos</h2>
+      <p>Son 12 grupos de 4 selecciones cada uno. Cada selección juega 3 partidos dentro del grupo. Los 2 primeros de cada grupo y los 8 mejores terceros pasan a los 16avos de final.</p>
+      <p>En el prode, completás los 6 partidos de cada grupo. Cuando terminás todos los grupos, se habilitan los 16avos.</p>
+    </div>
+
+    <div class="cj-seccion">
+      <h2 class="cj-seccion-titulo">La fase eliminatoria</h2>
+      <p>A partir de los 16avos, cada partido es a muerte. No hay empates — en eliminatorias, si ponés 1-1, el sistema no sabe quién ganó. Tenés que poner un resultado con ganador claro: 2-1, 1-0, 3-2, lo que sea.</p>
+      <p>Las fases se van habilitando a medida que avanzan los partidos reales. Cuando termina la fase de grupos del Mundial, se habilitan los 16avos. Y así hasta la final.</p>
+    </div>
+
+    <div class="cj-seccion">
+      <h2 class="cj-seccion-titulo">Los grupos privados</h2>
+      <p>Podés crear un grupo con tus amigos, tu familia o los del trabajo. Cada grupo tiene un código de 6 letras que compartís por WhatsApp. Cada miembro hace su propio prode y hay un ranking interno del grupo.</p>
+      <p>Podés estar en varios grupos al mismo tiempo. Tus puntos son los mismos en todos — lo que cambia es con quién competís.</p>
+    </div>
+
+    <div class="cj-seccion">
+      <h2 class="cj-seccion-titulo">Los personajes</h2>
+      <p>Cada selección del Mundial está representada por un personaje argento. Algunos son famosos, otros son arquetipos del imaginario porteño. La idea es simple: si sos argentino, cada selección te tiene que decir algo.</p>
+      <p>Podés ver todos los personajes en la sección <a href="selecciones.html" class="cj-link">Selecciones</a>.</p>
+    </div>
+
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<script>
+async function verificarSesion() {
+  const { data: { session } } = await db.auth.getSession();
+  if (!session) {
+    window.location.href = 'index.html';
+  }
+}
+verificarSesion();
+</script>
+
+<style>
+.como-jugar-layout {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 40px 20px 60px;
+}
+
+.cj-titulo {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: #1a1a1a;
+  margin-bottom: 12px;
+}
+
+.cj-intro {
+  color: #666;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 40px;
+  padding-bottom: 24px;
+  border-bottom: 3px solid #F6C700;
+}
+
+.cj-seccion {
+  margin-bottom: 36px;
+  padding-bottom: 36px;
+  border-bottom: 1px solid #e0d8c8;
+}
+
+.cj-seccion:last-child {
+  border-bottom: none;
+}
+
+.cj-seccion-titulo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: #1a1a1a;
+  margin-bottom: 12px;
+}
+
+.cj-seccion p {
+  color: #444;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin-bottom: 10px;
+}
+
+.cj-puntos {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.cj-punto {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #ffffff;
+  border: 2px solid #1a1a1a;
+  border-radius: 10px;
+  padding: 12px 16px;
+  box-shadow: 3px 3px 0px #1a1a1a;
+}
+
+.cj-punto-valor {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: #75AADB;
+  min-width: 60px;
+}
+
+.cj-punto-desc {
+  font-size: 0.9rem;
+  color: #1a1a1a;
+}
+
+.cj-link {
+  color: #75AADB;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.cj-link:hover {
+  text-decoration: underline;
+}
+</style>
+
+</body>
+</html>

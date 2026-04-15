@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Grupo — Prode Argento</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header id="main-header" class="header-chico">
+  <a href="index.html">
+    <img src="img/logo 2.png" class="header-logo" alt="Prode Argento">
+  </a>
+</header>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-item">
+    <span class="nav-icon">⚽</span>
+    <span class="nav-label">Prode</span>
+  </a>
+  <a href="grupo.html" class="nav-item active">
+    <span class="nav-icon">👥</span>
+    <span class="nav-label">Mi grupo</span>
+  </a>
+  <a href="ranking.html" class="nav-item">
+    <span class="nav-icon">🏆</span>
+    <span class="nav-label">Ranking</span>
+  </a>
+  <a href="selecciones.html" class="nav-item">
+    <span class="nav-icon">🌍</span>
+    <span class="nav-label">Selecciones</span>
+  </a>
+  <a href="index.html" class="nav-item" onclick="cerrarSesionNav(); return false;">
+    <span class="nav-icon">🚪</span>
+    <span class="nav-label">Salir</span>
+  </a>
+</nav>
+
+<main>
+  <div class="grupo-page-layout">
+<div class="grupo-page-izq">
+  <h1 class="grupo-page-titulo">Tu grupo</h1>
+  <p class="grupo-page-subtitulo">Competí con tus amigos, tu familia o los del trabajo. Cada uno hace su prode por separado y al final se ve quién la pegó más.</p>
+
+  <div class="grupo-page-acciones">
+    <button class="btn-grupo" onclick="crearGrupoPrivado()">➕ Crear grupo</button>
+    <button class="btn-grupo btn-grupo-secundario" onclick="unirseAGrupo()">🔑 Tengo un código</button>
+  </div>
+
+  <div id="mis-grupos-contenido">
+    <p class="cargando-texto">Cargando...</p>
+  </div>
+</div>
+
+<div class="grupo-page-divider"></div>
+
+<div class="grupo-page-der" id="como-funciona">
+  <h2 class="grupo-page-section-titulo">¿Cómo funciona?</h2>
+  <div class="grupo-steps">
+    <div class="grupo-step">
+      <div class="grupo-step-num">1</div>
+      <div class="grupo-step-texto">
+        <strong>Creás el grupo</strong>
+        <p>Le ponés el nombre que quieras y el sistema te da un código de 6 letras. Se lo mandás a quien quieras que se sume.</p>
+      </div>
+    </div>
+    <div class="grupo-step">
+      <div class="grupo-step-num">2</div>
+      <div class="grupo-step-texto">
+        <strong>Cada uno pronostica por su cuenta</strong>
+        <p>Los pronósticos son privados hasta que el partido arranca. Nadie ve el del otro antes de tiempo.</p>
+      </div>
+    </div>
+    <div class="grupo-step">
+      <div class="grupo-step-num">3</div>
+      <div class="grupo-step-texto">
+        <strong>Los puntos se actualizan solos</strong>
+        <p>Resultado exacto vale 7 puntos. Solo acertar el ganador vale 1. El ranking del grupo se actualiza después de cada partido.</p>
+      </div>
+    </div>
+    <div class="grupo-step">
+      <div class="grupo-step-num">4</div>
+      <div class="grupo-step-texto">
+        <strong>Podés estar en varios grupos</strong>
+        <p>Tus puntos son los mismos en todos los grupos. Lo que cambia es con quién competís en cada uno.</p>
+        <p class="grupo-cierre">Y demostrá que, como todo buen argentino, sos el que más sabe de fútbol.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<script src="data/selecciones.js"></script>
+<script src="nav.js"></script>
+<script src="app.js"></script>
+<script>
+    // Override para que después de crear/unirse recargue esta página
+const _crearGrupoOriginal = crearGrupoPrivado;
+const _unirseOriginal = unirseAGrupo;
+
+async function crearGrupoPrivado() {
+  const nombre = prompt('¿Cómo se llama tu grupo? (ej: "Los Pibes del trabajo")');
+  if (!nombre) return;
+
+  const codigo = Math.random().toString(36).substring(2, 8).toUpperCase();
+
+  const { data, error } = await db.from('grupos_prode').insert({
+    nombre,
+    codigo,
+    creador_id: usuarioActual.id
+  }).select().single();
+
+  if (error) { alert('Error al crear el grupo'); return; }
+
+  await db.from('grupo_miembros').insert({
+    grupo_id: data.id,
+    usuario_id: usuarioActual.id
+  });
+
+  alert(`✅ Grupo "${nombre}" creado!\n\nCódigo: ${codigo}\n\nMandáselo a tus amigos.`);
+  await cargarMisGruposPage();
+}
+
+async function unirseAGrupo() {
+  const codigo = prompt('Ingresá el código del grupo:');
+  if (!codigo) return;
+
+  const { data: grupo, error } = await db.from('grupos_prode')
+    .select('*')
+    .eq('codigo', codigo.toUpperCase())
+    .single();
+
+  if (error || !grupo) { alert('Código incorrecto.'); return; }
+
+  const { error: memberError } = await db.from('grupo_miembros').insert({
+    grupo_id: grupo.id,
+    usuario_id: usuarioActual.id
+  });
+
+  if (memberError) { alert('Ya sos miembro de este grupo.'); return; }
+
+  alert(`✅ Te uniste a "${grupo.nombre}"!`);
+  await cargarMisGruposPage();
+}
+  // Verificar sesión al cargar
+async function initGrupoPage() {
+  const { data: { session } } = await db.auth.getSession();
+  if (!session) {
+    window.location.href = 'index.html';
+    return;
+  }
+  const { data: userData } = await db.from('usuarios').select('*').eq('id', session.user.id).single();
+  usuarioActual = { id: session.user.id, nombre: userData.nombre, email: session.user.email };
+  await cargarMisGruposPage();
+}
+
+  async function cargarMisGruposPage() {
+    const { data: membresias } = await db.from('grupo_miembros')
+      .select('grupo_id')
+      .eq('usuario_id', usuarioActual.id);
+
+    const contenido = document.getElementById('mis-grupos-contenido');
+
+    if (!membresias || membresias.length === 0) {
+      contenido.innerHTML = `<p class="sin-grupos">Todavía no estás en ningún grupo. ¡Creá uno o pedile el código a un amigo!</p>`;
+      return;
+    }
+
+    const grupoIds = membresias.map(m => m.grupo_id);
+    const { data: grupos } = await db.from('grupos_prode').select('*').in('id', grupoIds);
+
+    let html = '';
+    for (const grupo of grupos) {
+      const ranking = await getRankingGrupo(grupo.id);
+      html += `
+        <div class="grupo-privado">
+          <div class="grupo-privado-header">
+            <span class="grupo-privado-nombre">${grupo.nombre}</span>
+            <span class="grupo-privado-codigo" onclick="copiarCodigo('${grupo.codigo}')">
+              🔑 ${grupo.codigo} — tap para copiar
+            </span>
+          </div>
+          <div class="ranking-grupo">
+            ${ranking.map((r, i) => `
+              <div class="ranking-fila ${r.id === usuarioActual.id ? 'ranking-yo' : ''}">
+                <span class="ranking-pos">${i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}°`}</span>
+                <span class="ranking-nombre">${r.nombre} ${r.id === usuarioActual.id ? '(vos)' : ''}</span>
+                <span class="ranking-puntos">${r.puntos} pts</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+    contenido.innerHTML = html;
+  }
+
+  function copiarCodigo(codigo) {
+    navigator.clipboard.writeText(codigo);
+    alert(`Código ${codigo} copiado. ¡Mandáselo a tus amigos!`);
+  }
+
+  function cerrarSesion() {
+    db.auth.signOut();
+    window.location.href = 'index.html';
+  }
+
+  initGrupoPage();
+</script>
+<style>
+.grupo-page-layout {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.grupo-page-titulo {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 900;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+}
+.grupo-cierre {
+  margin-top: 24px;
+  font-style: italic;
+  color: #666;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  text-align: center;
+  padding-top: 16px;
+  border-top: 1px solid #e0d8c8;
+}
+.grupo-page-subtitulo {
+  color: #666;
+  font-size: 0.95rem;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.grupo-page-acciones {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.grupo-page-divider {
+  height: 1px;
+  background: #e0d8c8;
+  margin: 40px 0;
+}
+
+.grupo-page-section-titulo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #1a1a1a;
+  margin-bottom: 20px;
+  padding-bottom: 8px;
+  border-bottom: 3px solid #F6C700;
+}
+
+.grupo-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.grupo-step {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  background: #ffffff;
+  border: 2px solid #1a1a1a;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 3px 3px 0px #1a1a1a;
+}
+
+.grupo-step-num {
+  background: #75AADB;
+  color: #ffffff;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  font-weight: 900;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 2px solid #1a1a1a;
+}
+
+.grupo-step-texto strong {
+  font-size: 0.95rem;
+  color: #1a1a1a;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.grupo-step-texto p {
+  font-size: 0.85rem;
+  color: #666;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.cargando-texto {
+  color: #999;
+  font-style: italic;
+  padding: 20px 0;
+}
+</style>
+
+
+</body>
+</html>

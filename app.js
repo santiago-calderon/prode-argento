@@ -6,6 +6,7 @@ let pronosticos = {};
 let faseActual = 'grupos';
 let resultadosReales = {};
 let pronMapElim = {};
+let fechasPartidos = {};
 
 
 
@@ -64,21 +65,35 @@ async function iniciarSesion() {
 }
 
 async function checkSesion() {
+  document.getElementById('navbar').style.display = 'none';
+  
   const { data: { session } } = await db.auth.getSession();
+  
+  // Ocultar loading
+  document.getElementById('loading-screen').style.display = 'none';
+  
   if (session) {
     const { data: userData } = await db.from('usuarios').select('*').eq('id', session.user.id).single();
     if (userData) {
       usuarioActual = { id: session.user.id, nombre: userData.nombre, email: session.user.email };
       await cargarPronosticos();
       mostrarApp();
+      return;
     }
   }
-}
+  
+  // No hay sesión — mostrar login
+  document.getElementById('login-screen').style.display = 'flex';
 
+  document.getElementById('main-header').classList.remove('header-chico');
+}
 async function mostrarApp() {
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('app').style.display = 'block';
   document.getElementById('main-header').classList.add('header-chico');
+  document.getElementById('navbar').style.display = 'flex';
+  document.getElementById('nav-saludo').style.display = 'flex';
+document.getElementById('nav-nombre').textContent = usuarioActual.nombre;
   await actualizarPuntajeHeader();
   render();
   renderMisGrupos();
@@ -107,7 +122,16 @@ async function cargarPronosticos() {
     });
   }
 
-  // Cargar resultados reales también
+  // Cargar fechas de partidos
+  const { data: configs } = await db.from('partidos_config').select('*');
+  fechasPartidos = {};
+  if (configs) {
+    configs.forEach(c => {
+      fechasPartidos[c.partido_id] = new Date(c.fecha_inicio);
+    });
+  }
+
+  // Cargar resultados reales
   const { data: resultados } = await db.from('resultados').select('*');
   resultadosReales = {};
   if (resultados) {
@@ -121,6 +145,8 @@ async function cargarPronosticos() {
 }
 
 async function actualizarPronostico(partidoId, campo, valor) {
+  valor = Math.abs(Math.floor(Number(valor)));
+  if (isNaN(valor)) return;
   if (!pronosticos[partidoId]) pronosticos[partidoId] = { golesLocal: '', golesVisitante: '' };
   pronosticos[partidoId][campo] = valor;
 
@@ -226,12 +252,6 @@ pronEliminatorios?.forEach(p => {
         <button class="btn-cerrar" onclick="cerrarSesion()">Salir</button>
       </div>
     </div>
-
-    <div class="grupos-privados-section">
-  <div class="grupos-privados-header" onclick="toggleGrupos()">
-    <span class="grupos-privados-titulo">👥 Mis grupos</span>
-    <span id="grupos-toggle-icon">▼</span>
-  </div>
   <div id="grupos-privados-body" style="display:none">
     <div class="grupos-privados-acciones">
       <button class="btn-grupo" onclick="crearGrupoPrivado()">➕ Crear grupo</button>
@@ -269,7 +289,7 @@ pronEliminatorios?.forEach(p => {
 
                   <div class="elim-centro">
                     <div class="partido-card-inputs">
-                      <input type="number" min="0" max="20"
+                      <input type="number" min="0" max="20 step= "1"
                         value="${pronMapElim[p.id + '_gl'] !== undefined && pronMapElim[p.id + '_gl'] !== null ? pronMapElim[p.id + '_gl'] : ''}"
                         onchange="actualizarPronosticoElim('${p.id}', '${local.id}', '${visitante.id}', 'gl', this.value)"
                         class="goles-input">
@@ -306,6 +326,8 @@ pronEliminatorios?.forEach(p => {
 }
 
 async function actualizarPronosticoElim(partidoId, localId, visitanteId, campo, valor) {
+  valor = Math.abs(Math.floor(Number(valor)));
+if (isNaN(valor)) return;
   const gl = campo === 'gl' ? parseInt(valor) : (pronMapElim[partidoId + '_gl'] ?? null);
   const gv = campo === 'gv' ? parseInt(valor) : (pronMapElim[partidoId + '_gv'] ?? null);
 
@@ -512,19 +534,10 @@ async function renderGrupos() {
            pron.golesVisitante !== null && pron.golesVisitante !== '';
   }).length;
   let html = `
-    <div class="top-bar">
-      <span class="usuario-saludo">👋 Hola, <strong>${usuarioActual.nombre}</strong> · <span class="puntaje-header">⭐ ${usuarioActual.puntos !== undefined ? usuarioActual.puntos : 0} pts</span></span>
-      <div style="display:flex;gap:8px">
-        <a href="ranking.html" class="btn-cerrar">🏆 Ranking</a>
-        <button class="btn-cerrar" onclick="cerrarSesion()">Salir</button>
-      </div>
-    </div>
+   <div class="top-bar">
+  <span class="usuario-saludo">👋 Hola, <strong>${usuarioActual.nombre}</strong> · <span class="puntaje-header">⭐ ${usuarioActual.puntos !== undefined ? usuarioActual.puntos : 0} pts</span></span>
+</div>
 
-   <div class="grupos-privados-section">
-  <div class="grupos-privados-header" onclick="toggleGrupos()">
-    <span class="grupos-privados-titulo">👥 Mis grupos</span>
-    <span id="grupos-toggle-icon">▼</span>
-  </div>
   <div id="grupos-privados-body" style="display:none">
     <div class="grupos-privados-acciones">
       <button class="btn-grupo" onclick="crearGrupoPrivado()">➕ Crear grupo</button>
@@ -560,7 +573,7 @@ async function renderGrupos() {
             const local = getSeleccion(p.local);
             const visitante = getSeleccion(p.visitante);
             const pron = pronosticos[p.id] || { golesLocal: '', golesVisitante: '' };
-            const bloqueado = resultadosReales[p.id];
+            const bloqueado = partidoBloqueado(p.id);
             return `
               <div class="partido-card ${bloqueado ? 'partido-bloqueado' : ''}">
                 <div class="partido-card-equipo">
@@ -575,9 +588,15 @@ async function renderGrupos() {
                 </div>
 
                 <div class="partido-card-centro">
-                  ${bloqueado
-                    ? `<div class="resultado-final">${bloqueado.golesLocal} - ${bloqueado.golesVisitante}</div>`
-                    : `<div class="partido-card-inputs">
+                 ${bloqueado
+                   ? resultadosReales[p.id]
+                   ? `<div class="resultado-final">${resultadosReales[p.id].golesLocal} - ${resultadosReales[p.id].golesVisitante}</div>`
+                   : pronosticos[p.id] && pronosticos[p.id].golesLocal !== null && pronosticos[p.id].golesVisitante !== null
+                    ? `<div class="partido-cerrado-resultado">
+                        🔒 <span class="mi-pronostico">${pronosticos[p.id].golesLocal} - ${pronosticos[p.id].golesVisitante}</span>
+                      </div>`
+                    : `<div class="partido-cerrado">🔒 Sin pronosticar</div>`
+                   : `<div class="partido-card-inputs">
                         <input type="number" min="0" max="20"
                           value="${pron.golesLocal !== null && pron.golesLocal !== '' ? pron.golesLocal : ''}"
                           onchange="actualizarPronostico('${p.id}', 'golesLocal', this.value)"
@@ -656,8 +675,11 @@ async function cerrarSesion() {
   pronosticos = {};
   document.getElementById('login-screen').style.display = 'flex';
   document.getElementById('app').style.display = 'none';
+  document.getElementById('main-header').classList.remove('header-chico');
+  document.getElementById('navbar').style.display = 'none';
+  document.getElementById('nav-saludo').style.display = 'none';
+  document.getElementById('nav-nombre').textContent = '';
 }
-
 function avanzarFase() {
   faseActual = 'dieciseisavos';
   render();
@@ -771,6 +793,15 @@ async function getRankingGrupo(grupoId) {
   }
 
   return ranking.sort((a, b) => b.puntos - a.puntos);
+}
+function partidoBloqueado(partidoId) {
+  // Bloqueado si tiene resultado real
+  if (resultadosReales[partidoId]) return true;
+  // Bloqueado si la fecha ya pasó (hora del servidor aproximada)
+  if (fechasPartidos[partidoId]) {
+    return new Date() > fechasPartidos[partidoId];
+  }
+  return false;
 }
 // ================================
 // ARRANQUE
